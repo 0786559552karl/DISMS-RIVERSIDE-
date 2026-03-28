@@ -1,0 +1,5 @@
+{
+  "name": "DISMS AI",
+  "description": "Digital Informal Settlement Management System for Riverside Residents Association Trust.",
+  "requestFramePermissions": ["geolocation"]
+}

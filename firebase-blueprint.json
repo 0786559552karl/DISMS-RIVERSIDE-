@@ -1,0 +1,121 @@
+{
+  "entities": {
+    "Member": {
+      "title": "Member",
+      "description": "A resident member of the Riverside Residents Association Trust.",
+      "type": "object",
+      "properties": {
+        "loginId": { "type": "string", "description": "ID Number used for login" },
+        "standNumber": { "type": "string", "description": "Stand Number used for login" },
+        "locationDetails": {
+          "type": "object",
+          "properties": {
+            "farmName": { "type": "string" },
+            "farmSize": { "type": "string" },
+            "deedNumber": { "type": "string" },
+            "province": { "type": "string" },
+            "constituency": { "type": "string" },
+            "ward": { "type": "string" },
+            "pollingStation": { "type": "string" },
+            "district": { "type": "string" },
+            "branch": { "type": "string" },
+            "cellVillage": { "type": "string" }
+          }
+        },
+        "ownershipStatus": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["STATE", "COUNCIL", "PRIVATE", "DISPUTED"] },
+            "disputeExplanation": { "type": "string" }
+          }
+        },
+        "allocationHistory": {
+          "type": "object",
+          "properties": {
+            "allocator": { "type": "string" },
+            "allocatorName": { "type": "string" },
+            "amountPaid": { "type": "string" }
+          }
+        },
+        "developmentHistory": {
+          "type": "object",
+          "properties": {
+            "initiator": { "type": "string" },
+            "developerName": { "type": "string" },
+            "amountPaid": { "type": "string" },
+            "isDone": { "type": "string", "enum": ["NO", "PARTIAL", "YES"] },
+            "developmentDone": { "type": "string" }
+          }
+        },
+        "adminOrgan": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "name": { "type": "string" },
+            "regNumber": { "type": "string" },
+            "address": { "type": "string" },
+            "contactNumbers": { "type": "string" }
+          }
+        },
+        "beneficiary": {
+          "type": "object",
+          "properties": {
+            "standNumber": { "type": "string" },
+            "standSize": { "type": "string" },
+            "fullNames": { "type": "string" },
+            "idNumber": { "type": "string" },
+            "dob": { "type": "string" },
+            "gender": { "type": "string", "enum": ["MALE", "FEMALE"] },
+            "maritalStatus": { "type": "string" },
+            "contactNumber": { "type": "string" },
+            "isEmployed": { "type": "string", "enum": ["YES", "NO"] },
+            "education": { "type": "string" }
+          }
+        },
+        "spouse": { "type": "object" },
+        "children": { "type": "array", "items": { "type": "object" } },
+        "dependants": { "type": "array", "items": { "type": "object" } },
+        "stateOfDevelopment": { "type": "object" },
+        "infrastructure": { "type": "object" },
+        "educationInfra": { "type": "object" },
+        "healthInfra": { "type": "object" },
+        "goodsSupply": { "type": "object" },
+        "religion": { "type": "object" },
+        "tenant": { "type": "object" },
+        "lastLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" },
+            "timestamp": { "type": "string" }
+          }
+        },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["loginId", "standNumber"]
+    },
+    "History": {
+      "title": "History",
+      "description": "Log of activities in the system.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/members/{memberId}": {
+      "schema": "Member",
+      "description": "Collection of settlement members."
+    },
+    "/history/{historyId}": {
+      "schema": "History",
+      "description": "System activity logs."
+    }
+  }
+}

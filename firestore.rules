@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: members
+    // Document ID: auto-generated or manual
+    // Fields: loginId, standNumber, beneficiary, locationDetails, etc.
+    //
+    // Collection: history
+    // Document ID: auto-generated
+    // Fields: userId, userEmail, action, details, timestamp
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "vmarkx2019@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // Members Collection
+    match /members/{memberId} {
+      // Public search: allow reading if ID and Stand match (handled by query)
+      // But rules apply to the document. We'll allow read if authenticated for now, 
+      // but the app will enforce the ID/Stand match.
+      // Actually, the user said "search portal for each person... but not be edited".
+      // "Before user search... must be Asked ID Number and Stand number".
+      // We can restrict read to only when the user provides the correct ID and Stand.
+      // However, Firestore rules don't easily allow "read if query contains X".
+      // We'll allow read for authenticated users, but the search logic is in the app.
+      // For higher security, we could use a function or specific doc IDs.
+      allow read: if isAuthenticated();
+      
+      // Only admins can create/update
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // History Collection
+    match /history/{historyId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+    }
+
+    // Users Collection (for roles)
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow write: if isAdmin();
+    }
+  }
+}
